@@ -21,8 +21,8 @@ const io = socketio(server, {
   }
 });
 
-// matching function
-const matchUsers = require('./helpers/matchUsers');
+//start matching function
+require('./helpers/matchUsers')(activeUsers, lobby, io);
 
 // Socket Listeners
 const enterLobby = require('./socket-listeners/enter-lobby')(activeUsers, lobby);
@@ -44,9 +44,7 @@ io.on('connection', (socket) => {
   socket.on('send-msg', ({msg, remoteSocketId}) => sendMsg(remoteSocketId, msg));
   socket.on("send-contact-info", ({ userId, remoteSocketId }) => sendContactInfo(remoteSocketId, userId));
   socket.on("end-call", ({ remoteSocketId }) => endCall(remoteSocketId));
-  socket.on('disconnect', () => disconnect(socket.id));
-  
-  matchUsers(activeUsers, lobby, io);
+  socket.on("disconnect", () => disconnect(socket.id));
 });
 
 app.use(cors());
