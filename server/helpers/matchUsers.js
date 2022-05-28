@@ -1,7 +1,9 @@
 const Call = require('../entities/Call');
 
+let timerId;
+
 const matchUsers = (activeUsers, lobby, io) => {
-  
+
   const startMatching = () => {
     // check users under each interests
     Object.keys(lobby.usersByInterest).forEach(interest => {
@@ -41,12 +43,13 @@ const matchUsers = (activeUsers, lobby, io) => {
     });
   };
 
-  // every 5 sec, check whether lobby is empty
-  setInterval(() => {
-    if (Object.keys(lobby.usersByInterest).length) {
-      startMatching();
-    }
-  }, 5000);
+  if (timerId) return;
+  
+  timerId = setTimeout(() => {
+    startMatching();
+    timerId = null;
+  }, 3000);
+
 };
 
 module.exports = matchUsers;

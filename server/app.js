@@ -21,7 +21,7 @@ const io = socketio(server, {
   }
 });
 
-//Import matching function
+// Import matching function
 const matchUsers = require('./helpers/matchUsers');
 
 // Socket Listeners
