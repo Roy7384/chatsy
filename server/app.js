@@ -21,8 +21,8 @@ const io = socketio(server, {
   }
 });
 
-//start matching function
-require('./helpers/matchUsers')(activeUsers, lobby, io);
+//Import matching function
+const matchUsers = require('./helpers/matchUsers');
 
 // Socket Listeners
 const enterLobby = require('./socket-listeners/enter-lobby')(activeUsers, lobby);
@@ -37,7 +37,10 @@ const disconnect = require('./socket-listeners/disconnect')(activeUsers, lobby);
 
 io.on('connection', (socket) => {
   socket.on('add-socket-id', ({userId}) => addSocketId(userId, socket.id));
-  socket.on('enter-lobby', ({userId}) => enterLobby(userId));
+  socket.on('enter-lobby', ({ userId }) => {
+    enterLobby(userId);
+    matchUsers(activeUsers, lobby, io);
+  });
   socket.on('leave-lobby', ({userId}) => leaveLobby(userId));
   socket.on('add-criteria', ({userId, interest}) => addCriteria(interest, userId));
   socket.on('remove-criteria', ({userId, interest}) => removeCriteria(interest, userId));
