@@ -43,9 +43,14 @@ const matchUsers = (activeUsers, lobby, io) => {
     });
   };
 
+  // if startMatching has been previously scheduled, do not call startMatching again
   if (timerId) return;
   
+  // leading edge call
+  startMatching();
+
   timerId = setTimeout(() => {
+    // trailing edge call
     startMatching();
     timerId = null;
   }, 3000);
